@@ -20,18 +20,24 @@ along with electronRuntimeEnvironment. If not, see < https://www.gnu.org/license
 const app = Application.currentApplication()
 app.includeStandardAdditions = true
 
-const fullVersionPath = Path(`${app.pathTo(this).toString().split('/').slice(0, -2).join('/')}/Resources/electronVersion`)
-const fullVersion = app.read(fullVersionPath)
-const majorVersion = fullVersion.split('.')[0]
+const appContents = app.pathTo(this).toString().split('/').slice(0, -2).join('/')
+
+const fullVersion = app.read(Path(`${appContents}/Resources/electronVersion`))
+const asarPath = Path(`${appContents}/Resources/app.asar`)
+const appName = app.read(Path(`${appContents}/Resources/appName`))
+
 const home = app.doShellScript('echo $HOME')
 const electronPath = `${home}/.ERE`
+
+const majorVersion = fullVersion.split('.')[0]
 const majorPath = `${electronPath}/${majorVersion}`
 
-Progress.description = `Downloading Electron Runtime v${fullVersion}...`
-Progress.additionalDescription = "This may take a while based on your internet connection"
-Progress.totalUnitCount = -1
 
 if (! Application("Finder").exists(Path(majorPath))) {
+    Progress.description = `Downloading Electron Runtime v${fullVersion}...`
+    Progress.additionalDescription = "This may take a while based on your internet connection"
+    Progress.totalUnitCount = -1
+
     app.doShellScript(`mkdir -p ${majorPath}`)
 
     // TODO Shouldn't be based on fullVersion, should be based on latest minor and patch from npm API
@@ -43,3 +49,16 @@ if (! Application("Finder").exists(Path(majorPath))) {
     Progress.additionalDescription = "Cleaning up..."
     app.doShellScript(`rm -f  ${majorPath}/LICENSE ${majorPath}/LICENSES.chromium.html ${majorPath}/electron.zip ${majorPath}/version`)
 }
+
+// These next lines are potentially hackish. This involves:
+// 1. Overwriting the existing (initially electron) icon
+// 3. Renaming the app
+// 4. Launching the app
+// This happens once per launch per app
+
+app.doShellScript(`mv ${appContents}/Resources/${appName}.icns ${majorPath}/*.app/Contents/Resources/electron.icns`)
+// Ignore errors here because renaming an app to itself (When launching the same app twice in a row) WILL fail
+app.doShellScript(`mv ${majorPath}/*.app ${majorPath}/${appName}.app 2>/dev/null || true`)
+
+ObjC.import('stdlib')
+$.system(`nohup ${majorPath}/*.app/Contents/MacOS/Electron ${asarPath} > /dev/null &`)
