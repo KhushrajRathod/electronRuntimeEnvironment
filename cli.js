@@ -40,9 +40,9 @@ const makeDarwin = async _ => {
     await Promise.all([
         writeFile(join(contentsDir, 'Resources', 'electron_version'), electronVersion),
         writeFile(join(helperContentsDir, 'MacOS', 'Electron Helper'), ''),
-        copyFile(join(__dirname, '../macOS/fetchScriptWrapper'), join(contentsDir, 'MacOS/Electron')),
-        copyFile(join(__dirname, '../macOS/electron.plist'), join(contentsDir, 'Info.plist')),
-        copyFile(join(__dirname, '../macOS/electron-helper.plist'), join(helperContentsDir, 'Info.plist')),
+        copyFile(join(__dirname, 'macOS', 'fetchScriptWrapper.sh'), join(contentsDir, 'MacOS/Electron')),
+        copyFile(join(__dirname, 'macOS', 'electron.plist'), join(contentsDir, 'Info.plist')),
+        copyFile(join(__dirname, 'macOS', 'electron-helper.plist'), join(helperContentsDir, 'Info.plist')),
     ])
 
     await chmod(join(contentsPath, 'MacOS/Electron'), 0o755)
