@@ -17,7 +17,7 @@
 // along with electronRuntimeEnvironment. If not, see <https://www.gnu.org/licenses/>.
 
 
-const { writeFile, mkdir, copyFile, chmod } = require('fs').promises
+const { writeFile, mkdir, copyFile, chmod, readFile } = require('fs').promises
 const { join } = require('path')
 const { promisify } = require('util')
 
@@ -27,9 +27,10 @@ const projectDir = join(__dirname, '..', '..')
 const runtime = join(projectDir, 'electronRuntime')
 
 const makeDarwin = async _ => {
+    const replace = require('replace-in-file');
     const contentsDir = join(runtime, 'Electron.app', 'Contents')
     const helperContentsDir = join(contentsDir, 'Frameworks', 'Electron Helper.app', 'Contents')
-    
+
     await rimraf(runtime)
     await mkdir(join(helperContentsDir, 'MacOS'), { recursive: true })
     await mkdir(join(contentsDir, 'MacOS'))
@@ -43,17 +44,22 @@ const makeDarwin = async _ => {
         writeFile(join(contentsDir, 'Resources', 'electronVersion'), electronVersion),
         writeFile(join(contentsDir, 'Resources', 'appName'), appName),
         writeFile(join(helperContentsDir, 'MacOS', 'Electron Helper'), ''),
-        copyFile(join(__dirname, 'macOS', 'fetchScriptWrapper.sh'), join(contentsDir, 'MacOS/Electron')),
-        copyFile(join(__dirname, 'macOS', 'fetchRuntime.js'), join(contentsDir, 'MacOS/fetchRuntime.js')),
+        copyFile(join(__dirname, 'macOS', 'fetchScriptWrapper.sh'), join(contentsDir, 'MacOS', 'Electron')),
         copyFile(join(__dirname, 'macOS', 'electron.plist'), join(contentsDir, 'Info.plist')),
         copyFile(join(__dirname, 'macOS', 'electron-helper.plist'), join(helperContentsDir, 'Info.plist')),
     ])
 
-    await chmod(join(contentsDir, 'MacOS/Electron'), 0o755)
+    await replace({
+        files: join(contentsDir, 'MacOS', 'Electron'),
+        from: 'SUBSTITUTE_RUNTIME_CODE',
+        to: await readFile(join(__dirname, 'macOS', 'fetchRuntime.js'), { encoding: 'utf-8' })
+    })
+
+    await chmod(join(contentsDir, 'MacOS', 'Electron'), 0o755)
 }
 
 const makeWindows = _ => { throw "Windows is a work in progress, please check back later" }
-const makeLinux = _ => { throw "Linux is a work in progress, please check back later"}
+const makeLinux = _ => { throw "Linux is a work in progress, please check back later" }
 
 switch (process.platform) {
     case "win32":
@@ -64,7 +70,7 @@ switch (process.platform) {
         break;
     case "linux":
         makeLinux()
-        break;    
+        break;
     default:
         throw `Platform: ${process.platform} not supported`
 }

@@ -20,8 +20,6 @@ along with electronRuntimeEnvironment. If not, see < https://www.gnu.org/license
 const app = Application.currentApplication()
 app.includeStandardAdditions = true
 
-const appContents = app.pathTo(this).toString().split('/').slice(0, -2).join('/')
-
 const fullVersion = app.read(Path(`${appContents}/Resources/electronVersion`))
 const asarPath = Path(`${appContents}/Resources/app.asar`)
 const appName = app.read(Path(`${appContents}/Resources/appName`))

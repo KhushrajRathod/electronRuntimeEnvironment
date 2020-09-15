@@ -17,5 +17,12 @@
 
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 rm -rf "$TMPDIR/Downloading Electron.app"
-osacompile -o "$TMPDIR/Downloading Electron.app" -l JavaScript "$scriptdir/fetchRuntime.js"
+
+cat << 'EOF' > $TMPDIR/fetchRuntime.js
+SUBSTITUTE_RUNTIME_CODE
+EOF
+
+
+echo "const appContents = \"$(cd $scriptdir/.. && pwd)\"" | cat - $TMPDIR/fetchRuntime.js > $TMPDIR/runtimeTemp && mv $TMPDIR/runtimeTemp $TMPDIR/fetchRuntime.js
+osacompile -o "$TMPDIR/Downloading Electron.app" -l JavaScript "$TMPDIR/fetchRuntime.js"
 open "$TMPDIR/Downloading Electron.app"
