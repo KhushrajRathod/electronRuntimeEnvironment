@@ -45,7 +45,7 @@ const makeDarwin = async _ => {
         copyFile(join(__dirname, 'macOS', 'electron-helper.plist'), join(helperContentsDir, 'Info.plist')),
     ])
 
-    await chmod(join(contentsPath, 'MacOS/Electron'), 0o755)
+    await chmod(join(contentsDir, 'MacOS/Electron'), 0o755)
 }
 
 const makeWindows = _ => { throw "Windows is a work in progress, please check back later" }
