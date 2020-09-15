@@ -17,7 +17,7 @@
 // along with electronRuntimeEnvironment. If not, see <https://www.gnu.org/licenses/>.
 
 
-const { writeFile, mkdir } = require('fs').promises
+const { writeFile, mkdir, copyFile } = require('fs').promises
 const { join } = require('path')
 const { promisify } = require('util')
 
@@ -40,9 +40,9 @@ const makeDarwin = async _ => {
     await Promise.all([
         writeFile(join(contentsDir, 'Resources', 'electron_version'), electronVersion),
         writeFile(join(helperContentsDir, 'MacOS', 'Electron Helper'), ''),
-        copy(join(__dirname, '../macOS/fetchScriptWrapper'), join(contentsDir, 'MacOS/Electron')),
-        copy(join(__dirname, '../macOS/electron.plist'), join(contentsDir, 'Info.plist')),
-        copy(join(__dirname, '../macOS/electron-helper.plist'), join(helperContentsDir, 'Info.plist')),
+        copyFile(join(__dirname, '../macOS/fetchScriptWrapper'), join(contentsDir, 'MacOS/Electron')),
+        copyFile(join(__dirname, '../macOS/electron.plist'), join(contentsDir, 'Info.plist')),
+        copyFile(join(__dirname, '../macOS/electron-helper.plist'), join(helperContentsDir, 'Info.plist')),
     ])
 
     await chmod(join(contentsPath, 'MacOS/Electron'), 0o755)
