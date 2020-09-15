@@ -17,7 +17,7 @@
 // along with electronRuntimeEnvironment. If not, see <https://www.gnu.org/licenses/>.
 
 
-const { writeFile, mkdir, copyFile } = require('fs').promises
+const { writeFile, mkdir, copyFile, chmod } = require('fs').promises
 const { join } = require('path')
 const { promisify } = require('util')
 
