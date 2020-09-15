@@ -12,3 +12,7 @@ Electron runtime environment that downloads electron on demand (using native com
 
 # Languages
 - macOS is written in native javascript (JXA)
+
+# License
+Electron runtime environment is licensed under GPL v3.  
+Portions of the project are from [electron-global](https://github.com/sentialx/electron-global) by SentialX under the terms of the MIT license.
