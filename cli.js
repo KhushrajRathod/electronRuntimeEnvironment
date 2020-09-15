@@ -35,7 +35,7 @@ const makeDarwin = async _ => {
     await mkdir(join(contentsDir, 'MacOS'))
     await mkdir(join(contentsDir, 'Resources'))
 
-    const electronVersion = JSON.parse(join(projectDir,'package.json')).version
+    const electronVersion = require(join(projectDir,'package')).version
 
     await Promise.all([
         writeFile(join(contentsDir, 'Resources', 'electron_version'), electronVersion),

@@ -1,6 +1,6 @@
 {
   "name": "electron-runtime-environment",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Electron runtime environment that downloads electron on demand (using native components for dialogs)",
   "main": "cli.js",
   "repository": "git@github.com:KhushrajRathod/electronRuntimeEnvironment.git",
