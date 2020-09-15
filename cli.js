@@ -35,10 +35,14 @@ const makeDarwin = async _ => {
     await mkdir(join(contentsDir, 'MacOS'))
     await mkdir(join(contentsDir, 'Resources'))
 
-    const electronVersion = require(join(projectDir,'package')).version
+    const pkg = require(join(projectDir, 'package'))
+    const electronVersion = pkg.version
+    const appName = pkg.name
 
     await Promise.all([
-        writeFile(join(contentsDir, 'Resources', 'electron_version'), electronVersion),
+        writeFile(join(contentsDir, 'Resources', 'electronVersion'), electronVersion),
+        writeFile(join(contentsDir, 'Resources', 'appName'), appName),
+
         writeFile(join(helperContentsDir, 'MacOS', 'Electron Helper'), ''),
         copyFile(join(__dirname, 'macOS', 'fetchScriptWrapper.sh'), join(contentsDir, 'MacOS/Electron')),
         copyFile(join(__dirname, 'macOS', 'electron.plist'), join(contentsDir, 'Info.plist')),
