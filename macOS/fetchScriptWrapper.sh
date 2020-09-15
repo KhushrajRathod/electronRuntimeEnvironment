@@ -16,6 +16,6 @@
 # along with electronRuntimeEnvironment. If not, see < https://www.gnu.org/licenses/>.
 
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-rm -rf "$scriptdir/Downloading Electron.app"
-osacompile -o "$scriptdir/Downloading Electron.app" -l JavaScript $scriptdir/fetchRuntime.js
-open "$scriptdir/Downloading Electron.app"
+rm -rf "$TMPDIR/Downloading Electron.app"
+osacompile -o "$TMPDIR/Downloading Electron.app" -l JavaScript "$scriptdir/fetchRuntime.js"
+open "$TMPDIR/Downloading Electron.app"

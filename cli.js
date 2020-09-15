@@ -42,9 +42,9 @@ const makeDarwin = async _ => {
     await Promise.all([
         writeFile(join(contentsDir, 'Resources', 'electronVersion'), electronVersion),
         writeFile(join(contentsDir, 'Resources', 'appName'), appName),
-
         writeFile(join(helperContentsDir, 'MacOS', 'Electron Helper'), ''),
         copyFile(join(__dirname, 'macOS', 'fetchScriptWrapper.sh'), join(contentsDir, 'MacOS/Electron')),
+        copyFile(join(__dirname, 'macOS', 'fetchRuntime.js'), join(contentsDir, 'MacOS/fetchRuntime.js')),
         copyFile(join(__dirname, 'macOS', 'electron.plist'), join(contentsDir, 'Info.plist')),
         copyFile(join(__dirname, 'macOS', 'electron-helper.plist'), join(helperContentsDir, 'Info.plist')),
     ])
@@ -68,3 +68,5 @@ switch (process.platform) {
     default:
         throw `Platform: ${process.platform} not supported`
 }
+
+console.log("Runtime ready")
